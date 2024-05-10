@@ -4,28 +4,17 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 	"path/filepath"
+	"time"
 
 	"golang.org/x/net/html"
 )
 
-var (
-	tz *time.Location
-	dir string
-)
+var dir string
 
 type img struct {
 	p string
 	t time.Time
-}
-
-func init() {
-	l, err := time.LoadLocation("Asia/Riyadh")
-	if err != nil {
-		log.Fatal(err)
-	}
-	tz = l
 }
 
 func findLink(n *html.Node) string {
@@ -47,7 +36,7 @@ func findTime(n *html.Node) time.Time {
 		if c.Type == html.ElementNode && c.Data == "a" {
 			for tc := c.FirstChild; tc != nil; tc = tc.NextSibling {
 				if tc.Type == html.TextNode {
-					t, err := time.ParseInLocation("Jan 2, 2006, 3:04 PM", tc.Data, tz)
+					t, err := time.Parse("Jan 2, 2006, 3:04 PM", tc.Data)
 					if err != nil {
 						log.Fatal(err)
 					}
